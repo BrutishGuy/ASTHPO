@@ -123,10 +123,12 @@ def analyze_images(images_path, prepend_info, output_path = './'):
             
     # first save the features separately
     features = np.array(activations)
-    df_features = pd.DataFrame({'Image': images, 'Features': features})
     np.save(output_path + prepend_info + '_Resnet50_features.npy', features)
-    df_features.to_csv(output_path + prepend_info + '_Resnet50_features_dict.csv')
-    return images, features
+    images_names = np.array(image_names)
+    np.save(output_path + prepend_info + '_Resnet50_features.npy', images_names)
+    df_features = pd.DataFrame({'Image': image_names, 'Features': features})
+    df_features.to_csv(output_path + prepend_info + '_Resnet50_features_dataframe.csv')
+    return image_names, features
 
 def run_tsne(images_path, output_path, prepend_info, tsne_dimensions, tsne_perplexity, tsne_learning_rate):
     images, pca_features = analyze_images(images_path, prepend_info)
