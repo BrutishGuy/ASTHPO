@@ -143,13 +143,14 @@ def run_tsne(images_path, output_path, prepend_info, tsne_dimensions, tsne_perpl
 
 
 if __name__ == '__main__':
-    images, features = analyze_images('./Downloads/imagenette/', 'Extracted_Features_', './Downloads/')
+    # './Downloads/imagenette/', 'Extracted_Features_', './Downloads/'
     params = process_arguments(sys.argv[1:])
     images_path = params['images_path']
     output_path = params['output_file']
     prepend_info = params['prepend_info']
-    tsne_dimensions = int(params['num_dimensions'])
-    tsne_perplexity = int(params['perplexity'])
-    tsne_learning_rate = int(params['learning_rate'])
-    run_tsne(images_path, output_path, prepend_info, tsne_dimensions, tsne_perplexity, tsne_learning_rate)
-    print("finished saving %s" % output_path)
+    images, features = analyze_images(images_path, output_path, prepend_info)
+    #tsne_dimensions = int(params['num_dimensions'])
+    #tsne_perplexity = int(params['perplexity'])
+    #tsne_learning_rate = int(params['learning_rate'])
+    #run_tsne(images_path, output_path, prepend_info, tsne_dimensions, tsne_perplexity, tsne_learning_rate)
+    print("Finished saving %s" % output_path)
