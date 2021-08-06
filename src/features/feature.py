@@ -125,8 +125,9 @@ def analyze_images(images_path, prepend_info, output_path = './'):
     features = np.array(activations)
     np.save(output_path + prepend_info + '_Resnet50_features.npy', features)
     images_names = np.array(image_names)
-    np.save(output_path + prepend_info + '_Resnet50_features.npy', images_names)
-    df_features = pd.DataFrame({'Image': image_names, 'Features': features})
+    np.save(output_path + prepend_info + '_Resnet50_image_names.npy', images_names)
+    df_features = pd.DataFrame(data = features)
+    df_features['Image'] = image_names
     df_features.to_csv(output_path + prepend_info + '_Resnet50_features_dataframe.csv')
     return image_names, features
 
