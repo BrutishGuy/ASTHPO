@@ -145,7 +145,7 @@ def analyze_dataset(dataset_name, prepend_info, output_path = './'):
     if prepend_info is None:
         prepend_info = dataset_name
     # make feature_extractor
-    model_ft = models.resnet18(pretrained=True)
+    model_ft = models.resnet50(pretrained=True)
     ### strip the last layer
     feature_extractor = torch.nn.Sequential(*list(model_ft.children())[:-1])
     ### check this works
@@ -172,11 +172,11 @@ def analyze_dataset(dataset_name, prepend_info, output_path = './'):
     ### PyTorch data loaders ###
     train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=1, pin_memory=True)
         # get some random training images
-    dataiter = iter(train_dl)
-    images, labels = dataiter.next()
+    #dataiter = iter(train_dl)
+    #images, labels = dataiter.next()
     
     # show images
-    imshow(torchvision.utils.make_grid(images))
+    #imshow(torchvision.utils.make_grid(images))
     for i, (images, labels) in enumerate(tqdm(train_dl, desc="Image Num. {}/{}".format(t, len(train_dl))), 0):
         #file_path = join(images_path,image_path)
         #image_x = Image.open(file_path).convert('RGB')
