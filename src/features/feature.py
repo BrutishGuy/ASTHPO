@@ -170,7 +170,7 @@ def analyze_dataset(dataset_name, prepend_info, output_path = './'):
     batch_size = 1
     t = 1
     ### PyTorch data loaders ###
-    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=1, pin_memory=True)
+    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=4, pin_memory=True)
         # get some random training images
     #dataiter = iter(train_dl)
     #images, labels = dataiter.next()
