@@ -189,10 +189,9 @@ def analyze_dataset(dataset_name, prepend_info, output_path = './'):
         #image_x = torch.unsqueeze(image_x, 0)
         outputs = feature_extractor(images)
         outputs = outputs.cpu().detach().numpy().squeeze()
-        sample_fname, _ = train_dl.dataset.samples[i]
-        print(sample_fname)
+
         activations.append(outputs)
-        image_names.append(sample_fname)
+        image_names.append(i)
         t += 1
             
     # first save the features separately
