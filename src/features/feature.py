@@ -20,7 +20,8 @@ from torch.utils.data import DataLoader
 from torch.utils.data import random_split
 from torchvision.utils import make_grid
 from torchvision.transforms import ToTensor
-from torchvision.datasets import ImageFolder
+from torchvision import datasets, transforms
+
 from tqdm import tqdm
 
 #
@@ -99,6 +100,58 @@ def analyze_images(images_path, prepend_info, output_path = './'):
     
     ### Making datasets ###
     train_ds = ImageFolder(images_path, preprocess)
+    batch_size = 1
+    t = 1
+    ### PyTorch data loaders ###
+    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=3, pin_memory=True)
+    for i, (images, labels) in enumerate(tqdm(train_dl, desc="Image Num. {}/{}".format(t, len(train_dl))), 0):
+        #file_path = join(images_path,image_path)
+        #image_x = Image.open(file_path).convert('RGB')
+        # Pass the image for preprocessing and the image preprocessed
+        #
+        #image_x = preprocess(image_x)
+        #
+        # Reshape, crop, and normalize the input tensor for feeding into network for evaluation
+        #
+        #image_x = torch.unsqueeze(image_x, 0)
+        outputs = feature_extractor(images)
+        outputs = outputs.cpu().detach().numpy().squeeze()
+        sample_fname, _ = train_dl.dataset.samples[i]
+        print(sample_fname)
+        activations.append(outputs)
+        image_names.append(sample_fname)
+        t += 1
+            
+    # first save the features separately
+    features = np.array(activations)
+    np.save(output_path + prepend_info + '_Resnet50_features.npy', features)
+    images_names = np.array(image_names)
+    np.save(output_path + prepend_info + '_Resnet50_image_names.npy', images_names)
+    df_features = pd.DataFrame(data = features)
+    df_features['Image'] = image_names
+    df_features.to_csv(output_path + prepend_info + '_Resnet50_features_dataframe.csv')
+    return image_names, features
+
+def analyze_dataset(dataset_name, prepend_info, output_path = './'):
+    if prepend_info is None:
+        prepend_info = dataset_name
+    # make feature_extractor
+    model_ft = models.resnet50(pretrained=True)
+    ### strip the last layer
+    feature_extractor = torch.nn.Sequential(*list(model_ft.children())[:-1])
+    ### check this works
+
+    # get images
+    #candidate_images = [f for f in os.listdir(images_path) if os.path.splitext(f)[1].lower() in ['.jpg','.png','.jpeg']]
+    # analyze images and grab activations
+    activations = []
+    image_names = []
+    
+    ### Making datasets ###
+    if dataset_name == 'cifar10' or dataset_name == 'cifar10subset':
+        train_ds = datasets.CIFAR10(root=path_to_data + '/cifar10/train/', train=True , download=True)
+    else:
+        return
     batch_size = 1
     t = 1
     ### PyTorch data loaders ###
