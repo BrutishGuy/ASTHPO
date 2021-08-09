@@ -42,6 +42,7 @@ preprocess = transforms.Compose([
 def process_arguments(args):
     parser = argparse.ArgumentParser(description='tSNE on audio')
     parser.add_argument('--images_path', action='store', help='path to directory of images')
+    parser.add_argument('--dataset_name', action='store', help='dataset to process')
     parser.add_argument('--output_path', action='store', help='path to where to put output json file')
     parser.add_argument('--prepend_info', action='store', default='', help='a cutsy name to prepend to your files (default is None)')
     parser.add_argument('--num_dimensions', action='store', default=2, help='dimensionality of t-SNE points (default 2)')
@@ -202,9 +203,15 @@ if __name__ == '__main__':
     # './Downloads/imagenette/', 'Extracted_Features_', './Downloads/'
     params = process_arguments(sys.argv[1:])
     images_path = params['images_path']
+    dataset_name = params['dataset_name']
+    
     output_path = params['output_path']
     prepend_info = params['prepend_info']
-    images, features = analyze_images(images_path, prepend_info, output_path)
+    if images_path:
+        images, features = analyze_images(images_path, prepend_info, output_path)
+    else:
+        images, features = analyze_dataset(dataset_name, prepend_info, output_path)
+        
     #tsne_dimensions = int(params['num_dimensions'])
     #tsne_perplexity = int(params['perplexity'])
     #tsne_learning_rate = int(params['learning_rate'])
