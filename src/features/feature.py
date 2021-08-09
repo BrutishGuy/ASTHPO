@@ -104,7 +104,7 @@ def analyze_images(images_path, prepend_info, output_path = './'):
     batch_size = 1
     t = 1
     ### PyTorch data loaders ###
-    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=3, pin_memory=True)
+    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=1, pin_memory=True)
     for i, (images, labels) in enumerate(tqdm(train_dl, desc="Image Num. {}/{}".format(t, len(train_dl))), 0):
         #file_path = join(images_path,image_path)
         #image_x = Image.open(file_path).convert('RGB')
@@ -133,11 +133,19 @@ def analyze_images(images_path, prepend_info, output_path = './'):
     df_features.to_csv(output_path + prepend_info + '_Resnet50_features_dataframe.csv')
     return image_names, features
 
+def imshow(img):
+    img = img / 2 + 0.5     # unnormalize
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
+
+
+
 def analyze_dataset(dataset_name, prepend_info, output_path = './'):
     if prepend_info is None:
         prepend_info = dataset_name
     # make feature_extractor
-    model_ft = models.resnet50(pretrained=True)
+    model_ft = models.resnet18(pretrained=True)
     ### strip the last layer
     feature_extractor = torch.nn.Sequential(*list(model_ft.children())[:-1])
     ### check this works
@@ -148,22 +156,27 @@ def analyze_dataset(dataset_name, prepend_info, output_path = './'):
     activations = []
     image_names = []
     
+    
     ### Making datasets ###
     if dataset_name == 'cifar10' or dataset_name == 'cifar10subset':
-        all_transforms = transforms.Compose([
-            #transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(
-            mean=[0.4914, 0.4822, 0.4465],
-            std=[0.2023, 0.1994, 0.2010]
-            )])
+        all_transforms = transforms.Compose(
+            [transforms.Resize(224),
+             transforms.ToTensor(),
+             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
         train_ds = datasets.CIFAR10(root='../../data/cifar10/train/', train=True , download=True, transform=all_transforms)
     else:
         return
     batch_size = 1
     t = 1
     ### PyTorch data loaders ###
-    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=3, pin_memory=True)
+    train_dl = DataLoader(train_ds, batch_size, shuffle=False, num_workers=1, pin_memory=True)
+        # get some random training images
+    dataiter = iter(train_dl)
+    images, labels = dataiter.next()
+    
+    # show images
+    imshow(torchvision.utils.make_grid(images))
     for i, (images, labels) in enumerate(tqdm(train_dl, desc="Image Num. {}/{}".format(t, len(train_dl))), 0):
         #file_path = join(images_path,image_path)
         #image_x = Image.open(file_path).convert('RGB')
