@@ -150,7 +150,7 @@ def analyze_dataset(dataset_name, prepend_info, output_path = './'):
     
     ### Making datasets ###
     if dataset_name == 'cifar10' or dataset_name == 'cifar10subset':
-        train_ds = datasets.CIFAR10(root=path_to_data + '/cifar10/train/', train=True , download=True)
+        train_ds = datasets.CIFAR10(root='../../data/cifar10/train/', train=True , download=True)
     else:
         return
     batch_size = 1
