@@ -28,7 +28,7 @@ MarkupSafe==1.0
 matplotlib==2.0.2
 networkx==1.11
 nose==1.3.7
-numpy==1.13.3
+numpy==1.22.0
 pdoc==0.3.2
 protobuf==3.4.0
 psutil==5.3.1
