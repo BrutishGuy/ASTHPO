@@ -22,7 +22,7 @@ imagesize==0.7.1
 Jinja2==2.9.6
 Keras==2.0.8
 Lasagne==0.1
-Mako==1.0.7
+Mako==1.2.2
 Markdown==2.4.1
 MarkupSafe==1.0
 matplotlib==2.0.2
